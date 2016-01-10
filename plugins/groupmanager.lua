@@ -53,7 +53,7 @@ do
       local data = load_data(_config.moderation.data)
 
       -- create a group
-      if matches[1] == 'mkgroup' and matches[2] and is_mod(msg.from.id, msg.to.id) then
+      if matches[1] == 'cgp' and matches[2] and is_mod(msg.from.id, msg.to.id) then
         create_group_chat (msg.from.print_name, matches[2], ok_cb, false)
 	      return 'Group '..string.gsub(matches[2], '_', ' ')..' has been created.'
       -- add a group to be moderated
@@ -130,8 +130,8 @@ do
             msgr = export_chat_link(get_receiver(msg), export_chat_link_cb, {data=data, msg=msg})
           end
 	      elseif matches[1] == 'group' then
-          -- lock {bot|name|member|photo|sticker}
-          if matches[2] == 'lock' then
+          -- L {bot|name|member|photo|sticker}
+          if matches[2] == 'L' then
             if matches[3] == 'bot' and is_mod(msg.from.id, msg.to.id) then
 	            if settings.lock_bots == 'yes' then
                 return 'Group is already locked from bots.'
@@ -167,8 +167,8 @@ do
 	            end
               return 'Please send me the group photo now'
             end
-          -- unlock {bot|name|member|photo|sticker}
-		      elseif matches[2] == 'unlock' then
+          -- U {bot|name|member|photo|sticker}
+		      elseif matches[2] == 'U' then
             if matches[3] == 'bot' and is_mod(msg.from.id, msg.to.id) then
 	            if settings.lock_bots == 'no' then
                 return 'Bots are allowed to enter group.'
@@ -240,10 +240,10 @@ do
               sticker_state = '🔓'
             end
             local text = 'Group settings:\n'
-                  ..'\n'..lock_bots_state..' Lock group from bot : '..settings.lock_bots
-                  ..'\n'..lock_name_state..' Lock group name : '..settings.lock_name
-                  ..'\n'..lock_photo_state..' Lock group photo : '..settings.lock_photo
-                  ..'\n'..lock_member_state..' Lock group member : '..settings.lock_member
+                  ..'\n'..lock_bots_state..' L group from bot : '..settings.lock_bots
+                  ..'\n'..lock_name_state..' L group name : '..settings.lock_name
+                  ..'\n'..lock_photo_state..' L group photo : '..settings.lock_photo
+                  ..'\n'..lock_member_state..' L group member : '..settings.lock_member
                   ..'\n'..antispam_state..' Spam and Flood protection : '..settings.anti_flood
                   ..'\n'..sticker_state..' Sticker policy : '..settings.sticker
                   ..'\n'..greeting_state..' Welcome message : '..settings.welcome
@@ -360,15 +360,15 @@ do
     description = 'Plugin to manage group chat.',
     usage = {
       admin = {
-        '!mkgroup <group_name> : Make/create a new group.',
+        '!cgp <group_name> : Make/create a new group.',
         '!addgroup : Add group to moderation list.',
         '!remgroup : Remove group from moderation list.'
       },
       moderator = {
-        '!group <lock|unlock> bot : {Dis}allow APIs bots.',
-        '!group <lock|unlock> member : Lock/unlock group member.',
-        '!group <lock|unlock> name : Lock/unlock group name.',
-        '!group <lock|unlock> photo : Lock/unlock group photo.',
+        '!group <L|U> bot : {Dis}allow APIs bots.',
+        '!group <L|U> member : L/U group member.',
+        '!group <L|U> name : L/U group name.',
+        '!group <L|U> photo : L/U group photo.',
         '!group settings : Show group settings.',
         '!link <set> : Generate/revoke invite link.',
         '!setabout <description> : Set group description.',
@@ -390,11 +390,11 @@ do
       '^!(addgroup)$',
       '%[(audio)%]',
       '%[(document)%]',
-      '^!(group) (lock) (.*)$',
+      '^!(group) (L) (.*)$',
       '^!(group) (settings)$',
-      '^!(group) (unlock) (.*)$',
+      '^!(group) (U) (.*)$',
       '^!(link) (.*)$',
-      '^!(mkgroup) (.*)$',
+      '^!(cgp) (.*)$',
       '%[(photo)%]',
       '^!(remgroup)$',
       '^!(rules)$',
